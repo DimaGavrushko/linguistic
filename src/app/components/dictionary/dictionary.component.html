@@ -1,0 +1,110 @@
+<nav class="navbar navbar-light bg-light justify-content-between">
+  <a class="navbar-brand">Всего слов словаре: {{totalDictionary.length}}</a>
+  <a class="navbar-brand">Суммарная частота слов в словаре: {{getTotalFrequency()}}</a>
+  <div class="form-inline">
+    <input class="form-control mr-sm-2" type="text" [(ngModel)]="searchPattern"/>
+    <button class="btn btn btn-dark" type="submit" (click)="search(searchPattern)">Поиск</button>
+  </div>
+</nav>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+    <a class="navbar-brand" href="#">Сортировать по: </a>
+    <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+      <li class="nav-item">
+        <button class="btn btn btn-dark btn-sm" href="#" (click)="sortBy(1)">Алфавиту</button>
+      </li>
+      <li class="nav-item">
+        <button class="btn btn btn-dark btn-sm" href="#" (click)="sortBy(2)">Алфавиту в обратном порядке</button>
+      </li>
+      <li class="nav-item">
+        <button class="btn btn btn-dark btn-sm" href="#" (click)="sortBy(3)">Возрастанию частоты</button>
+      </li>
+      <li class="nav-item">
+        <button class="btn btn btn-dark btn-sm" href="#" (click)="sortBy(4)">Убыванию частоты</button>
+      </li>
+    </ul>
+  </div>
+
+  <p [ngStyle]="{'color':'white', 'margin':'auto', 'margin-right': '5px'}">{{addedWordStatus}}</p>
+  <input class="form-control mr-sm-2" [ngStyle]="{'max-width':'250px'}" type="text" #addedWord />
+  <button type="button" class="btn btn btn-light" (click)="addNewWord(addedWord.value)" [disabled]="isDisabled()">
+    Add new word
+  </button>
+
+</nav>
+<table class="table table-striped">
+  <thead>
+  <tr>
+    <th scope="col">Слово</th>
+    <th scope="col">Сколько раз встретилось</th>
+    <th scope="col">Тэги</th>
+    <th scope="col">Начальная форма</th>
+    <th scope="col">Тэги(н. ф.)</th>
+    <th scope="col">В каких файлах</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let word of totalDictionary.slice(this.dictionaryIndex*this.currentPage-this.dictionaryIndex ,this.dictionaryIndex*this.currentPage); let i = index">
+    <td><input class="form-control" #input type="text" value="{{word.key}}"></td>
+    <td>{{word.value}}</td>
+    <td>
+      <span *ngFor="let tag of word.tags; let j = index">
+        <span [title]="showHint(word.tags)">{{tag + ' '}}</span>
+        <i class="fa fa-close" style="font-size:14px;color:darkred" [ngStyle]="{'margin':'auto', 'margin-right': '13px'}"
+           (click)="deleteTag(i, j, true)"></i>
+      </span>
+
+      <select #select class="form-control form-control-sm" [ngStyle]="{'max-width': '250px'}">
+        <option disabled>Выберите тэг</option>
+        <option  *ngFor="let tag of formTags(word.tags)" value="{{tag.key}}">{{tag.key + '-' + tag.value}}</option>
+      </select>
+      <button (click)="addTag(i, select.options[select.selectedIndex].value)" class="btn btn btn-dark">Add tag</button>
+    </td>
+    <td>{{word.lemma}}</td>
+    <td>
+      <span *ngFor="let tag of word.lemmaTags; let j = index">
+        <span [title]="showHint(word.lemmaTags)">{{tag + ' '}}</span>
+        <i class="fa fa-close" style="font-size:14px;color:darkred" [ngStyle]="{'margin':'auto', 'margin-right': '13px'}"
+           (click)="deleteTag(i, j, false)"></i>
+      </span>
+    </td>
+    <td>
+      <span *ngFor="let file of word.settings">
+        <p>{{file.textName + ' '}}</p>
+      </span>
+    </td>
+    <td>
+      <button class="btn btn btn-dark" type="submit" (click)="editClick(i, input.value)">Edit</button>
+    </td>
+  </tr>
+  </tbody>
+</table>
+
+<nav aria-label="Page navigation">
+  <ul class="pagination">
+    <li class="page-item">
+      <a class="page-link" href="#" aria-label="Previous" (click)="switchCurrentPage(false)"
+         *ngIf="!(this.currentPage < 2)">
+        <span aria-hidden="true">&laquo;</span>
+        <span class="sr-only">Previous</span>
+      </a>
+    </li>
+    <li class="page-item"><a class="page-link" href="#" (click)="setCurrentPage(currentPage - 2)"
+                             *ngIf="!(this.currentPage < 3)">{{currentPage - 2}}</a></li>
+    <li class="page-item"><a class="page-link" href="#" (click)="setCurrentPage(currentPage - 1)"
+                             *ngIf="!(this.currentPage < 2)">{{currentPage - 1}}</a></li>
+    <li class="page-item"><a class="page-link" href="#" (click)="setCurrentPage(currentPage)">{{currentPage}}</a></li>
+    <li class="page-item"><a class="page-link" href="#" (click)="setCurrentPage(currentPage + 1)">{{currentPage + 1}}</a></li>
+    <li class="page-item"><a class="page-link" href="#" (click)="setCurrentPage(currentPage + 2)">{{currentPage + 2}}</a></li>
+    <li class="page-item">
+      <a class="page-link" href="#" aria-label="Next" (click)="switchCurrentPage(true)">
+        <span aria-hidden="true">&raquo;</span>
+        <span class="sr-only">Next</span>
+      </a>
+    </li>
+    <li class="page-item">
+      <div class="page-link">Страница: {{currentPage}}</div>
+    </li>
+  </ul>
+</nav>
+
