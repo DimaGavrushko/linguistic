@@ -1,0 +1,11 @@
+<div #allContent>
+<span *ngFor="let word of text">
+  <span class="word">{{"  " + word.value}}
+   <select class="tag">
+    <option *ngFor="let tag of formTags()" [selected]="getSelected(tag, word.pos)"><span>{{tag}}</span></option>
+   </select>
+  </span>
+</span>
+</div>
+
+<button (click)="getAllContent()">Download</button>

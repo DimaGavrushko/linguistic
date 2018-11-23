@@ -1,8 +1,8 @@
 const Dictionary = require('../model/DictionaryModel');
-const posTagger = require( 'wink-pos-tagger' );
+const posTagger = require('wink-pos-tagger');
 const tagger = posTagger();
 const brill = require('brill');
-const lemmatize = require( 'wink-lemmatizer' );
+const lemmatize = require('wink-lemmatizer');
 const tagsMapper = require('../tagsMapper');
 
 module.exports = {
@@ -16,15 +16,15 @@ module.exports = {
 
 function formDictionary(data, path, name) {
   let str = data.replace(/["\r\n“”\\]/g, "");
+  str = str.replace(/’/g, "'");
   let tmpDict;
   let wordDict = [];
   tmpDict = tagger.tagSentence(str);
-  tmpDict.forEach((word)=> {
-    if (word.normal === 'fit') {
-      console.log(word);
-    }
-    if(word.value[0] === '\'') {
-      word = tagger.tagSentence(word.lemma)[0];
+  tmpDict.forEach((word) => {
+    if (word.value[0] === '\'' || word.value === 'n\'t' || word.value === 'wo') {
+      if (word.lemma) {
+        word = tagger.tagSentence(word.lemma)[0];
+      }
     }
     let res = word.normal.match(/[a-z]+/);
     if (res && res[0].length === word.normal.length) {
@@ -45,17 +45,17 @@ function formDictionary(data, path, name) {
   let wordMap = new Map();
   let posMap = new Map();
   let lemmaMap = new Map();
-  wordDict.forEach((word)=> {
+  wordDict.forEach((word) => {
     let lemmaTag = tagsMapper[word.pos];
     if (wordMap.has(word.normal)) {
       let value = wordMap.get(word.normal);
       wordMap.set(word.normal, ++value);
       let tagArr = posMap.get(word.normal).split(" ");
-      for(let i = 0; i < tagArr.length; i++) {
-        if(tagArr[i] === word.pos) {
+      for (let i = 0; i < tagArr.length; i++) {
+        if (tagArr[i] === word.pos) {
           break;
         }
-        if( i === tagArr.length - 1) {
+        if (i === tagArr.length - 1) {
           tagArr.push(word.pos);
           break;
         }
@@ -83,7 +83,7 @@ function formDictionary(data, path, name) {
       posMap.set(word.normal, word.pos);
     }
   });
-  wordMap.forEach( (value, key) => {
+  wordMap.forEach((value, key) => {
     const tmpObj = {
       key: key,
       value: value,
@@ -97,7 +97,7 @@ function formDictionary(data, path, name) {
     for (let tag in brillTags) {
       result.add(brillTags[tag]);
     }
-    wordTags.forEach((tag)=> {
+    wordTags.forEach((tag) => {
       result.add(tag);
     });
     tmpObj.tags = Array.from(result);
@@ -240,7 +240,7 @@ function addNewWord(word) {
 }
 
 function deleteTag(word, tag, isWord) {
-  return Dictionary.findOne({word: word}).then( dictWord => {
+  return Dictionary.findOne({word: word}).then(dictWord => {
     if (isWord) {
       let newTags = dictWord.tags.filter(wordTag => {
         return wordTag !== tag;
@@ -260,9 +260,9 @@ function deleteTag(word, tag, isWord) {
 }
 
 function addTag(word, tag) {
-  return Dictionary.findOne({word: word}).then( dictWord => {
+  return Dictionary.findOne({word: word}).then(dictWord => {
     dictWord.tags.push(tag);
-    tagsMapper[tag] ? dictWord.lemmaTags.push(tagsMapper[tag]): null;
+    tagsMapper[tag] ? dictWord.lemmaTags.push(tagsMapper[tag]) : null;
     return Dictionary.updateOne({'_id': dictWord._id}, {$set: {tags: dictWord.tags}}).then(() => {
       return Dictionary.updateOne({'_id': dictWord._id}, {$set: {lemmaTags: dictWord.lemmaTags}}).then(() => {
         let res = [];

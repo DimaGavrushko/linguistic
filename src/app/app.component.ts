@@ -1,6 +1,7 @@
 import {Component} from '@angular/core';
 import {DictionaryService} from './services/dictionary.service';
 import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
+import {TextService} from './services/text.service';
 
 @Component({
   selector: 'app-root',
@@ -10,10 +11,12 @@ import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 export class AppComponent {
   status: string;
   myFrequencyDict: Array<{ key, value, tags, lemma, lemmaTags, settings }> = [];
-  isVisible = false;
   isFinished = false;
+  isDictionary = true;
+  isText = false;
+  currText: any;
 
-  constructor(private dictionaryService: DictionaryService, private http: HttpClient) {
+  constructor(private textService: TextService, private dictionaryService: DictionaryService, private http: HttpClient) {
     this.status = '';
     this.dictionaryService.getAllDictionary().subscribe((ans) => {
       this.myFrequencyDict = <any>ans;
@@ -26,7 +29,9 @@ export class AppComponent {
         }
         return 0;
       });
-      this.isVisible = true;
+      this.textService.getText().subscribe( (text) => {
+        this.currText = text;
+      });
     });
   }
 
@@ -75,11 +80,25 @@ export class AppComponent {
             }
             return 0;
           });
+
+          this.textService.getText().subscribe( (text) => {
+            this.currText = text;
+          });
         });
         clearInterval(id);
       }
     }, 10000);
 
+  }
+
+  dictionaryVision() {
+    this.isDictionary = true;
+    this.isText = false;
+  }
+
+  textVision() {
+    this.isDictionary = false;
+    this.isText = true;
   }
 
 }

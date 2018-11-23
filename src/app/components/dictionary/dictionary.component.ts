@@ -1,6 +1,7 @@
 import {Component, Input} from '@angular/core';
 import {DictionaryService} from '../../services/dictionary.service';
 import {TAGS} from '../TAGS';
+import * as comparators from '../../comparators/comparators';
 
 @Component({
   selector: 'app-dictionary',
@@ -8,89 +9,47 @@ import {TAGS} from '../TAGS';
   styleUrls: ['./dictionary.component.css'],
 })
 export class DictionaryComponent {
-  addedWord = false;
+
   dictionaryIndex: number;
   currentPage: number;
-  searchPattern: string;
   currentSortValue: number;
-  addedWordStatus: string;
   @Input() totalDictionary: Array<{ key, value, tags, lemma, lemmaTags, settings }>;
   @Input() oldTotalDictionary: Array<{ key, value, tags, lemma, lemmaTags, settings }>;
 
   constructor(private dictionaryService: DictionaryService) {
-    this.addedWordStatus = '';
-    this.searchPattern = '';
     this.currentPage = 1;
     this.dictionaryIndex = 50;
     this.currentSortValue = 1;
   }
 
-  switchCurrentPage(increased: boolean) {
-    increased ? this.currentPage++ : this.currentPage--;
+  getNewDict(array: any) {
+    this.totalDictionary = array;
   }
 
-  setCurrentPage(n: number) {
-    this.currentPage = n;
+  getOldDict(array: any) {
+    this.oldTotalDictionary = array;
+  }
+
+  getCurrSortValue(val: number) {
+    this.currentSortValue = val;
   }
 
   sortBy(type: number) {
     switch (type) {
       case 1:
-        this.totalDictionary.sort((a, b) => {
-          if (a.key < b.key) {
-            return -1;
-          }
-          if (a.key > b.key) {
-            return 1;
-          }
-          return 0;
-        });
+        this.totalDictionary.sort(comparators.compareByKeyInc);
         break;
       case 2:
-        this.totalDictionary.sort((a, b) => {
-          if (b.key < a.key) {
-            return -1;
-          }
-          if (b.key > a.key) {
-            return 1;
-          }
-          return 0;
-        });
+        this.totalDictionary.sort(comparators.compareByKeyDec);
         break;
       case 3:
-        this.totalDictionary.sort((a, b) => {
-          return a.value - b.value;
-        });
+        this.totalDictionary.sort(comparators.compareByValueInc);
         break;
       case 4:
-        this.totalDictionary.sort((a, b) => {
-          return b.value - a.value;
-        });
+        this.totalDictionary.sort(comparators.compareByValueDec);
         break;
     }
     this.currentSortValue = type;
-  }
-
-  search(word: string) {
-    this.totalDictionary = [...this.oldTotalDictionary];
-    if (word) {
-      const newDict = [];
-      this.totalDictionary.forEach((pair, i) => {
-        if (pair.key.indexOf(word) !== -1) {
-          newDict.push(this.totalDictionary[i]);
-        }
-      });
-      this.totalDictionary = newDict;
-      this.sortBy(this.currentSortValue);
-    }
-  }
-
-  getTotalFrequency() {
-    let sum = 0;
-    this.totalDictionary.forEach((word) => {
-      sum += word.value;
-    });
-    return sum;
   }
 
   editClick(index: number, newWord: string) {
@@ -98,40 +57,9 @@ export class DictionaryComponent {
       this.dictionaryService.updateWordInDictionary(this.totalDictionary[index].key, newWord).subscribe(data => {
         this.totalDictionary = (<any>data);
         this.oldTotalDictionary = this.totalDictionary;
-        console.log(this.currentSortValue);
         this.sortBy(this.currentSortValue);
       });
     }
-  }
-
-  addNewWord(word: string) {
-    if (word) {
-      if (!this.containsInDict(word)) {
-        this.addedWord = true;
-        this.addedWordStatus = 'Слово загружается';
-        this.dictionaryService.addNewWord(word).subscribe(data => {
-          this.totalDictionary = (<any>data);
-          this.oldTotalDictionary = this.totalDictionary;
-          this.sortBy(this.currentSortValue);
-          this.addedWord = false;
-          this.addedWordStatus = 'Слово загружено';
-        });
-      } else {
-        this.addedWordStatus = 'Такое слово уже есть';
-      }
-    } else {
-      this.addedWordStatus = 'Введите слово';
-    }
-  }
-
-  private containsInDict(word: string) {
-    return this.oldTotalDictionary.some(dictWord => {
-      return dictWord.key === word;
-    });
-  }
-
-  isDisabled() {
-    return this.addedWord;
   }
 
   showHint(tags: Array<string>) {

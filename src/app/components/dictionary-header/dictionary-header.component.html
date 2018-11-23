@@ -1,0 +1,34 @@
+<nav class="navbar navbar-light bg-light justify-content-between">
+  <a class="navbar-brand">Всего слов словаре: {{totalDictionary.length}}</a>
+  <a class="navbar-brand">Суммарная частота слов в словаре: {{getTotalFrequency()}}</a>
+  <div class="form-inline">
+    <input class="form-control mr-sm-2" type="text" [(ngModel)]="searchPattern"/>
+    <button class="btn btn btn-dark" type="submit" (click)="search(searchPattern)">Поиск</button>
+  </div>
+</nav>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+    <a class="navbar-brand" href="#">Сортировать по: </a>
+    <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+      <li class="nav-item">
+        <button class="btn btn btn-dark btn-sm" href="#" (click)="sortBy(1)">Алфавиту</button>
+      </li>
+      <li class="nav-item">
+        <button class="btn btn btn-dark btn-sm" href="#" (click)="sortBy(2)">Алфавиту в обратном порядке</button>
+      </li>
+      <li class="nav-item">
+        <button class="btn btn btn-dark btn-sm" href="#" (click)="sortBy(3)">Возрастанию частоты</button>
+      </li>
+      <li class="nav-item">
+        <button class="btn btn btn-dark btn-sm" href="#" (click)="sortBy(4)">Убыванию частоты</button>
+      </li>
+    </ul>
+  </div>
+
+  <p [ngStyle]="{'color':'white', 'margin':'auto', 'margin-right': '5px'}">{{addedWordStatus}}</p>
+  <input class="form-control mr-sm-2" [ngStyle]="{'max-width':'250px'}" type="text" #addedWord />
+  <button type="button" class="btn btn btn-light" (click)="addNewWord(addedWord.value)" [disabled]="isDisabled()">
+    Add new word
+  </button>
+
+</nav>

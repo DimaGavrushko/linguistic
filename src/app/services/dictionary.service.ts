@@ -34,4 +34,6 @@ export class DictionaryService {
   addTag(word: string, tag: string) {
     return this.http.post('/api/addTag', {word: word, tag: tag});
   }
+
+
 }

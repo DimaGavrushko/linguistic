@@ -1,4 +1,16 @@
 <input type="file" (change)="updateDictionary($event)" class="form-control-file border">{{status}}
-<app-dictionary [totalDictionary]="myFrequencyDict" [oldTotalDictionary]="myFrequencyDict" *ngIf="isVisible">
-</app-dictionary>
-
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav">
+      <li class="nav-item active">
+        <a class="nav-link" href="#" (click)="dictionaryVision()">Словарь</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#" (click)="textVision()">Текст</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+<hr [ngStyle]="{'margin-top':'0'}">
+<app-dictionary *ngIf="isDictionary" [totalDictionary]="myFrequencyDict" [oldTotalDictionary]="myFrequencyDict"></app-dictionary>
+<app-colored-text *ngIf="isText" [text]="currText"></app-colored-text>

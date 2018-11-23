@@ -1,4 +1,5 @@
 export const TAGS = {
+  '"': 'simple double quote',
   CC: 'cardinal conjunctions',
   IN: 'prepositions and subordinating conjunctions',
   CD: 'cardinal number',
@@ -35,6 +36,9 @@ export const TAGS = {
   VBZ: 'verb, 3rd person singular present',
   WDT: 'wh-determiner',
   WP: 'wh-pronoun',
-  WRB: 'wh-adverb'
+  WRB: 'wh-adverb',
+  '.': 'sentence-final punctuation',
+  ':': 'mid-sentence punctuation',
+  ',': 'comma'
 };
 

@@ -1,0 +1,13 @@
+.word {
+  font-weight: bold;
+}
+
+.tag {
+  font-size: 10px;
+  background-color: yellow;
+}
+
+.container {
+  display: flex;
+  flex-wrap: nowrap;
+}
