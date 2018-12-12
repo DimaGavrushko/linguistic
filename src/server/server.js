@@ -9,7 +9,10 @@ const textServices = require('./services/text.service');
 
 const form = formidable();
 const jsonParser = bodyParser.json();
-let myCurrFile = null;
+let myCurrFile = {
+  data: null,
+  name: ''
+};
 app.listen(3000, () => console.log(`server is running...`));
 
 
@@ -21,19 +24,45 @@ mongoose.connect(`mongodb://localhost:27017`, {useNewUrlParser: true}, function 
 
 app.post('/api/updateDictionary', form, (req, res) => {
   fs.readFile(req.files.uploadFile.path, 'utf8', function (err, data) {
-    myCurrFile = data;
+    myCurrFile.data = data;
+    myCurrFile.name = req.files.uploadFile.name;
     updateDictionary(data, req.files.uploadFile.path, req.files.uploadFile.name);
     res.send();
   })
 });
 
 app.get('/api/getText', (req, res) => {
-  if (myCurrFile) {
-    res.send(textServices.formText(myCurrFile));
+  if (myCurrFile.data) {
+    textServices.formText(myCurrFile).then(ans => res.send(ans));
   } else {
-    res.send(myCurrFile);
+    res.send(null);
   }
-  myCurrFile = null;
+  myCurrFile = {
+    data: null,
+    name: ''
+  };
+});
+
+app.get('/api/getTextsList', (req, res) => {
+  textServices.getTextsList().then(ans => {
+    res.send(ans);
+  });
+});
+
+app.get('/api/getColoredText', (req, res) => {
+  textServices.getColoredText(req.query.name).then(ans => {
+    res.send(ans);
+  });
+});
+
+app.post('/api/updateColoredText', jsonParser, (req, res) => {
+  textServices.updateColoredText(req.body.fileName, req.body.newText).then(() => res.send());
+});
+
+app.get('/api/getAllStatistic', (req, res) => {
+  textServices.getAllStatistic().then(ans => {
+    res.send(ans);
+  });
 });
 
 app.get('/api/getAllDictionary', (req, res) => {

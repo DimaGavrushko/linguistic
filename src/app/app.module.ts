@@ -9,6 +9,7 @@ import {NavigationPanelComponent} from './components/navigation-panel/navigation
 import {DictionaryHeaderComponent} from './components/dictionary-header/dictionary-header.component';
 import {ColoredTextComponent} from './components/colored-text/colored-text.component';
 import {TextService} from './services/text.service';
+import { TextsStatisticComponent } from './components/texts-statistic/texts-statistic.component';
 
 
 
@@ -18,7 +19,8 @@ import {TextService} from './services/text.service';
     DictionaryComponent,
     NavigationPanelComponent,
     DictionaryHeaderComponent,
-    ColoredTextComponent
+    ColoredTextComponent,
+    TextsStatisticComponent
   ],
   imports: [
     BrowserModule,

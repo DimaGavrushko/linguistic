@@ -1,0 +1,44 @@
+<p [ngStyle]="{'margin-top':'50px', 'margin-bottom':'20px', 'font-weight':'bold'}">Абсолютная частота встречаемости
+  каждого кода</p>
+<label [ngStyle]="{'margin-right': '15px'}">Сортировать по: </label>
+<button (click)="sortBy(1)" class="btn-dark btn-sm">Возрастанию</button>
+<button (click)="sortBy(2)" class="btn-light btn-sm">Убыванию</button>
+<table *ngIf="statistic" class="table table-sm">
+  <tbody>
+  <tr *ngFor="let tag of statistic.tagStatistic">
+    <td>{{tag.tag}}</td>
+    <td>{{' ' + tag.frequency}}</td>
+  </tr>
+  </tbody>
+</table>
+
+<p [ngStyle]="{'margin-top':'50px', 'margin-bottom':'20px', 'font-weight':'bold'}">Абсолютная частота встречаемости пары
+  "слово_код"</p>
+<label [ngStyle]="{'margin-right': '15px'}">Сортировать по частоте: </label>
+<button (click)="sortBy(3)" class="btn-dark btn-sm">Возрастанию</button>
+<button (click)="sortBy(4)" class="btn-light btn-sm">Убыванию</button>
+
+<label [ngStyle]="{'margin-right': '15px', 'margin-left': '15px'}">Сортировать по алфавиту: </label>
+<button (click)="sortBy(5)" class="btn-dark btn-sm">Возрастанию</button>
+<button (click)="sortBy(6)" class="btn-light btn-sm">Убыванию</button>
+<div class="scroll">
+  <table *ngIf="statistic" class="table table-sm">
+    <tr *ngFor="let tag of statistic.wordTagStatistic">
+      <td>{{tag.wordTag}}</td>
+      <td>{{' ' + tag.frequency}}</td>
+    </tr>
+  </table>
+</div>
+
+<p [ngStyle]="{'margin-top':'50px', 'margin-bottom':'20px', 'font-weight':'bold'}">Абсолютная частота встречаемости пары
+  кодов(первый код - строчка, второй - столбец)</p>
+<table *ngIf="statistic" width="800px" border="1" cellpadding="4" cellspacing="0">
+  <tr>
+    <td>&nbsp;</td>
+    <td *ngFor="let column of statistic.tagTagStatistic; let i = index">{{tagMas[i]}}</td>
+  </tr>
+  <tr *ngFor="let column of statistic.tagTagStatistic; let i = index">
+    <td>{{tagMas[i]}}</td>
+    <td *ngFor="let value of column">{{value}}</td>
+  </tr>
+</table>

@@ -42,3 +42,49 @@ export const TAGS = {
   ',': 'comma'
 };
 
+export const tagsMas = [
+  'CC',
+  'IN',
+  'CD',
+  'DT',
+  'FW',
+  'JJ',
+  'JJR',
+  'JJS',
+  'LS',
+  'MD',
+  'NN',
+  'NNS',
+  'NP',
+  'NNP',
+  'NPS',
+  'PDT',
+  'POS',
+  'PP',
+  'PRP',
+  'PRP$',
+  'EX',
+  'RB',
+  'RBR',
+  'RBS',
+  'RP',
+  'SYM',
+  'TO',
+  'UH',
+  'VB',
+  'VBD',
+  'VBG',
+  'VBN',
+  'VBP',
+  'VBZ',
+  'WDT',
+  'WP',
+  'WRB',
+  '.',
+  ':',
+  ',',
+  '"'
+];
+
+
+

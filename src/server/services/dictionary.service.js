@@ -46,7 +46,7 @@ function formDictionary(data, path, name) {
   let posMap = new Map();
   let lemmaMap = new Map();
   wordDict.forEach((word) => {
-    let lemmaTag = tagsMapper[word.pos];
+    let lemmaTag = tagsMapper.tagToTag[word.pos];
     if (wordMap.has(word.normal)) {
       let value = wordMap.get(word.normal);
       wordMap.set(word.normal, ++value);
@@ -103,8 +103,8 @@ function formDictionary(data, path, name) {
     tmpObj.tags = Array.from(result);
     let lemmaTagsSet = new Set();
     tmpObj.tags.forEach(tag => {
-      if (tagsMapper[tag]) {
-        lemmaTagsSet.add(tagsMapper[tag]);
+      if (tagsMapper.tagToTag[tag]) {
+        lemmaTagsSet.add(tagsMapper.tagToTag[tag]);
       }
     });
     tmpObj.lemmaTags = Array.from(lemmaTagsSet);
@@ -262,7 +262,7 @@ function deleteTag(word, tag, isWord) {
 function addTag(word, tag) {
   return Dictionary.findOne({word: word}).then(dictWord => {
     dictWord.tags.push(tag);
-    tagsMapper[tag] ? dictWord.lemmaTags.push(tagsMapper[tag]) : null;
+    tagsMapper.tagToTag[tag] ? dictWord.lemmaTags.push(tagsMapper.tagToTag[tag]) : null;
     return Dictionary.updateOne({'_id': dictWord._id}, {$set: {tags: dictWord.tags}}).then(() => {
       return Dictionary.updateOne({'_id': dictWord._id}, {$set: {lemmaTags: dictWord.lemmaTags}}).then(() => {
         let res = [];

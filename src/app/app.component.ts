@@ -14,7 +14,9 @@ export class AppComponent {
   isFinished = false;
   isDictionary = true;
   isText = false;
+  isStatistic = false;
   currText: any;
+  currTextList: string[];
 
   constructor(private textService: TextService, private dictionaryService: DictionaryService, private http: HttpClient) {
     this.status = '';
@@ -29,14 +31,17 @@ export class AppComponent {
         }
         return 0;
       });
-      this.textService.getText().subscribe( (text) => {
+      this.textService.getText().subscribe((text) => {
         this.currText = text;
+        this.textService.getTextsList().subscribe(list => {
+          this.currTextList = <string[]>list;
+        });
       });
     });
   }
 
   updateDictionary(event) {
-    this.status = 'Словарь загружается';
+    this.status = 'Текст обрабатывается';
     const fileList: FileList = event.target.files;
     if (fileList.length > 0) {
       const file: File = fileList[0];
@@ -69,7 +74,7 @@ export class AppComponent {
       });
       if (this.isFinished) {
         this.dictionaryService.getAllDictionary().subscribe((ans) => {
-          this.status = 'Словарь загружен';
+          this.status = 'Текст обработан';
           this.myFrequencyDict = <any>ans;
           this.myFrequencyDict.sort((a, b) => {
             if (a.key < b.key) {
@@ -81,8 +86,11 @@ export class AppComponent {
             return 0;
           });
 
-          this.textService.getText().subscribe( (text) => {
+          this.textService.getText().subscribe((text) => {
             this.currText = text;
+            this.textService.getTextsList().subscribe(list => {
+              this.currTextList = <string[]>list;
+            });
           });
         });
         clearInterval(id);
@@ -94,11 +102,18 @@ export class AppComponent {
   dictionaryVision() {
     this.isDictionary = true;
     this.isText = false;
+    this.isStatistic = false;
   }
 
   textVision() {
     this.isDictionary = false;
     this.isText = true;
+    this.isStatistic = false;
   }
 
+  statisticVision() {
+    this.isStatistic = true;
+    this.isText = false;
+    this.isDictionary = false;
+  }
 }

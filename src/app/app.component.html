@@ -2,15 +2,20 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <div class="collapse navbar-collapse" id="navbarNav">
     <ul class="navbar-nav">
-      <li class="nav-item active">
+      <li class="nav-item">
         <a class="nav-link" href="#" (click)="dictionaryVision()">Словарь</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="#" (click)="textVision()">Текст</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#" (click)="statisticVision()">Снять статистику</a>
       </li>
     </ul>
   </div>
 </nav>
 <hr [ngStyle]="{'margin-top':'0'}">
 <app-dictionary *ngIf="isDictionary" [totalDictionary]="myFrequencyDict" [oldTotalDictionary]="myFrequencyDict"></app-dictionary>
-<app-colored-text *ngIf="isText" [text]="currText"></app-colored-text>
+<app-colored-text *ngIf="isText" [text]="currText ? currText.text : ''"
+                  [currTextName]="currText ? currText.textName: ''" [textList]="currTextList"></app-colored-text>
+<app-texts-statistic *ngIf="isStatistic"></app-texts-statistic>

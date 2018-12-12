@@ -1,4 +1,4 @@
-module.exports = {
+const tagToTag = {
   CC: 'CC',
   IN: 'IN',
   CD: 'CD',
@@ -35,6 +35,54 @@ module.exports = {
   VBZ: 'VB',
   WDT: 'WDT',
   WP: 'WP',
-  WRB: 'WRB',
-  NNP: 'NNP'
+  WRB: 'WRB'
+};
+
+const tagToIndex = {
+  CC: 0,
+  IN: 1,
+  CD: 2,
+  DT: 3,
+  FW: 4,
+  JJ: 5,
+  JJR: 6,
+  JJS: 7,
+  LS: 8,
+  MD: 9,
+  NN: 10,
+  NNS: 11,
+  NP: 12,
+  NNP: 13,
+  NPS: 14,
+  PDT: 15,
+  POS: 16,
+  PP: 17,
+  PRP: 18,
+  PRP$: 19,
+  EX: 20,
+  RB: 21,
+  RBR: 22,
+  RBS: 23,
+  RP: 24,
+  SYM: 25,
+  TO: 26,
+  UH: 27,
+  VB: 28,
+  VBD: 29,
+  VBG: 30,
+  VBN: 31,
+  VBP: 32,
+  VBZ: 33,
+  WDT: 34,
+  WP: 35,
+  WRB: 36,
+  '.': 37,
+  ':': 38,
+  ',': 39,
+  '"': 40,
+};
+
+module.exports = {
+  tagToTag,
+  tagToIndex
 };

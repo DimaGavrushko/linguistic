@@ -11,4 +11,20 @@ export class TextService {
     return this.http.get('/api/getText');
   }
 
+  getTextsList() {
+    return this.http.get('/api/getTextsList');
+  }
+
+  getColoredText(fileName: string) {
+    return this.http.get('/api/getColoredText?name=' + fileName);
+  }
+
+  updateColoredText(fileName: string, newText: any) {
+    return this.http.post('/api/updateColoredText', {fileName: fileName, newText: newText});
+  }
+
+  getAllStatistic() {
+    return this.http.get('/api/getAllStatistic');
+  }
+
 }
